@@ -1,0 +1,11 @@
+SAPI=1
+[main]
+name = nexys4ddr_nodemcu
+description = ""
+
+backend = vivado
+
+[vivado]
+part = xc7a100tcsg324-1
+hw_device = xc7a100t_0
+top_module = orpsoc_top

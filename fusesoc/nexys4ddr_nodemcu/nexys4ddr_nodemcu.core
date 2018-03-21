@@ -1,0 +1,54 @@
+CAPI=1
+[main]
+depend =
+ gpio
+ adv_debug_sys
+ jtag_tap
+ mor1kx-3.1
+ or1200-r2
+ uart16550-1.5-vivado
+ wb_intercon-vivado-1.0
+
+[fileset core]
+usage = vivado
+files =
+  rtl/verilog/MIG_ddr/ip/design_1_clk_wiz_0_0/design_1_clk_wiz_0_0.xci[file_type=xci]
+  rtl/verilog/MIG_ddr/ip/design_1_mig_7series_0_0/design_1_mig_7series_0_0.xci[file_type=xci]
+  rtl/verilog/MIG_ddr/ip/design_1_mig_7series_0_0/mig_a.prj[file_type=user]
+
+[verilog]
+src_files =
+ rtl/verilog/switch.v
+ rtl/verilog/orpsoc_top.v
+ rtl/verilog/rstgen.v
+ rtl/verilog/rom.v
+ rtl/verilog/wb_intercon.v
+ rtl/verilog/contador_up.v
+ rtl/verilog/biestable_d.v
+ rtl/verilog/and_gate.v
+ rtl/verilog/pulse_button.v
+ rtl/verilog/bootloaderModule.v
+ rtl/verilog/registro.v
+ rtl/verilog/MIG_ddr/xilinx_ddr2.v
+ rtl/verilog/MIG_ddr/wb2axi.v
+ rtl/verilog/generic_mux.v
+ rtl/verilog/spi_slave.v
+ rtl/verilog/display.v
+ rtl/verilog/display_mem.v
+ rtl/verilog/secuencia.v
+ rtl/verilog/convertidor.v
+ rtl/verilog/contador.v
+ 
+include_files =
+ rtl/verilog/include/or1200_defines.v
+ rtl/verilog/include/orpsoc-defines.v
+ rtl/verilog/wb_intercon.vh
+ rtl/verilog/include/xilinx_ddr2_params.v
+
+
+
+
+[fileset constraints]
+usage = vivado
+file_type = xdc
+files = data/Nexys4DDR_Master.xdc

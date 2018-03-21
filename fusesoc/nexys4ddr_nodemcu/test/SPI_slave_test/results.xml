@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites name="results">
+  <testsuite name="all" package="all" tests="0">
+    <property name="random_seed" value="1519220010" />
+    <testcase classname="test_spi_slave" name="test_read_byte" ratio_time="95.4009306131727" sim_time_ns="1.601" time="0.01678180694580078" />
+  </testsuite>
+</testsuites>

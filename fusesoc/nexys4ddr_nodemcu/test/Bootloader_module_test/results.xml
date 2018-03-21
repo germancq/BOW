@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites name="results">
+  <testsuite name="all" package="all" tests="0">
+    <property name="random_seed" value="1519235500" />
+    <testcase classname="test_bootloader_module" name="test_boot" ratio_time="86.01864207930184" sim_time_ns="1.081" time="0.01256704330444336" />
+  </testsuite>
+</testsuites>
