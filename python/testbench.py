@@ -17,13 +17,18 @@ def main():
 	for k in range (0, int(sys.argv[1])):
 		print('execution instance %i',k)
 		start = time.time()
-		os.system('python3 client_.py pAA.HEX')
+		if(k%2 == 0):
+			os.system('python3 client_.py pAA.HEX')
+			print ('test A')
+		else:
+			os.system('python3 client_.py pBB.HEX')
+			print ('test B')
 		end = time.time()		
 		total = end - start
 		print('time execution = %i',total)
 		measures.append(total)
 		print('average time is %i',numpy.average(measures))
-		time.sleep(3)
+		time.sleep(4)
 	
 	
 

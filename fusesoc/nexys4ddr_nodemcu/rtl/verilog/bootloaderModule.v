@@ -86,7 +86,18 @@ contador_up counter_1(
    .up(up_bytes),
    .q(counter_bytes)
 );
+/*
+reg up_div_clk;
+wire [31:0] counter_div;
+reg rst_counter_div;
 
+contador_up counter_2(
+   .clk(clk),
+   .rst(rst_counter_div),
+   .up(up_div_clk),
+   .q(counter_div)
+);
+*/
 wire[31:0] reg_block_bumber;
 reg r_block_cl;
 reg r_block_w;
@@ -185,10 +196,8 @@ begin
 					next_state = IDLE_BLOCK;
 			end
 		IDLE_BLOCK:
-		    begin
-		        if (i_spi_eof == 1'b1)
-		            next_state = IDLE;
-		        else if(i_spi_comm == 1'b1)
+		    begin 
+		       if(i_spi_comm == 1'b1)
 		            next_state = READ_BLOCK;    
 		    end	
 		READ_BLOCK:
@@ -254,7 +263,7 @@ begin
 		    begin
 		        next_state = reg_state_prev[3:0];
 		    end    
-		default: ;
+		default: next_state = IDLE;
 		
 	endcase
 end
@@ -301,6 +310,9 @@ begin
    	o_cpu_rst = 1'b1;
     reset_button = 1'b0;
 
+    //up_div_clk = 1'b0;
+    //rst_counter_div = 1'b0;
+
 	case(current_state)
 	
 		IDLE:
@@ -311,6 +323,7 @@ begin
 				rst_counter = 1'b1;
 				rst_counter_word = 1'b1;
 				rst_counter_bytes = 1'b1;
+				//rst_counter_div = 1'b1;
 
 				reg_sdspi_data_3_cl = 1;
 				reg_sdspi_data_2_cl = 1;
@@ -375,10 +388,12 @@ begin
             end              
         READ_BYTE:
             begin
-                o_spi_byte = 1'b0;
+                o_spi_byte = 1'b0;//counter_div[31];
+                //up_div_clk = 1'b1;
             end
         UP_WORD_BYTE://up the two counters bytes
             begin
+              //rst_counter_div = 1'b0;
               up_word = 1'b1;
               up_bytes = 1'b1;
               if(counter_word_o == 32'h00000000)
@@ -404,10 +419,11 @@ end
 //CS <= NS
 always @(posedge clk)
 begin
-	if(reset)
-		current_state <= IDLE;
+	if(reset || i_spi_eof == 1'b1)
+		current_state <= IDLE;	
 	else
 		current_state <= next_state;
 end
 
 endmodule
+
