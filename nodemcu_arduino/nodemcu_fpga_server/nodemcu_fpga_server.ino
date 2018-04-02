@@ -1,10 +1,10 @@
 // Design: nodemcu_fpga_server
-// Description: 
+// Description:
 // Author: German Cano Quiveu <germancq@dte.us.es>
 // Copyright Universidad de Sevilla, Spain
 
 #include <ESP8266WebServer.h>
-#include <ESP8266WiFi.h> 
+#include <ESP8266WiFi.h>
 #include<SPI.h>
 #include "base64.hpp" //https://github.com/Densaugeo/base64_arduino
 
@@ -13,12 +13,12 @@ ESP8266WebServer server(3000); //creating the server at port 3000
 const char* ssid = ""; // Rellena con el nombre de tu red WiFi
 const char* password = ""; // Rellena con la contraseña de tu red WiFi
 
-//sclk:D5 
+//sclk:D5
 //miso:D6
 //mosi:D7
 //cs:D8
 
-IPAddress ip(192, 168, 1, 8);  
+IPAddress ip(192, 168, 1, 40);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
@@ -47,9 +47,9 @@ void setup() {
   Serial.begin(115200);
 
   delay(10);
- 
+
   // Conectamos a la red WiFi
- 
+
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
@@ -58,19 +58,19 @@ void setup() {
   WiFi.config(ip,gateway,subnet);
   WiFi.mode(WIFI_STA); // Modo cliente WiFi
   WiFi.begin(ssid, password);
- 
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
- 
+
   Serial.println("");
-  Serial.println("WiFi connected"); 
+  Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP()); // Mostramos la IP
 
-  
-  
+
+
   server.on("/data", handleJSON);
   server.begin();
 
@@ -91,7 +91,7 @@ void setup() {
 
 
   interruptCounter = 0;
-  
+
 }
 
 void handleInterrupt() {
@@ -120,7 +120,7 @@ void handleInterrupt() {
 void handleJSON() {
   digitalWrite(slaveSelectPin, HIGH);
   error = 0;
- 
+
   timemillisA = 0;
   timemillisB = 0;
   interruptCounter = 0;
@@ -134,7 +134,7 @@ void handleJSON() {
   encoded_string.getBytes(aux_buffer,encoded_string.length());
   n_block = server.arg("n_block").toInt();
   total_blocks = server.arg("total_blocks").toInt();
-  
+
   /*
   Serial.print("total_bytes : ");
   Serial.println(total_bytes);
@@ -159,7 +159,7 @@ void handleJSON() {
   digitalWrite(o_boot_comm,HIGH);
   do{
     timemillisA = millis();
-    
+
     if((timemillisA - timemillisB)>1000){
       finished_send = 1;
       delayMicros(3000);
@@ -169,9 +169,9 @@ void handleJSON() {
       digitalWrite(o_boot_comm,LOW);
       delayMicros(100);
 
-      return server.send(404,"text/plain","error"); 
+      return server.send(404,"text/plain","error");
     }
-    
+
   }while(finished_send == 0);
   attachInterrupt(digitalPinToInterrupt(i_boot_req_byte), handleInterrupt, FALLING);
   digitalWrite(o_boot_comm,LOW);
@@ -179,7 +179,7 @@ void handleJSON() {
   //Serial.println("terminado envio n_block");
   finished_send = 0;
   //attachInterrupt(digitalPinToInterrupt(i_boot_req_byte), handleInterrupt, FALLING);
- 
+
   //enviar total_bytes
   data[3] = (byte)(total_bytes);
   data[2] = (byte)(total_bytes>>8);
@@ -190,18 +190,18 @@ void handleJSON() {
   timemillisB = millis();
   do{
     timemillisA = millis();
-    
+
     if((timemillisA - timemillisB)>1000){
-     
+
       finished_send = 1;
       delayMicros(3000);
       digitalWrite(o_boot_end,HIGH);
       delayMicros(3000);
-      detachInterrupt(i_boot_req_byte); 
+      detachInterrupt(i_boot_req_byte);
       digitalWrite(o_boot_comm,LOW);
       delayMicros(100);
 
-      return server.send(404,"text/plain","error"); 
+      return server.send(404,"text/plain","error");
     }
   }while(finished_send == 0);
   attachInterrupt(digitalPinToInterrupt(i_boot_req_byte), handleInterrupt, FALLING);
@@ -221,9 +221,9 @@ void handleJSON() {
   timemillisB = millis();
   do{
     timemillisA = millis();
-    
+
     if((timemillisA - timemillisB)>1000){
-      
+
       finished_send = 1;
       delayMicros(3000);
       digitalWrite(o_boot_end,HIGH);
@@ -231,8 +231,8 @@ void handleJSON() {
       detachInterrupt(i_boot_req_byte);
       digitalWrite(o_boot_comm,LOW);
       delayMicros(100);
-      
-      return server.send(404,"text/plain","error"); 
+
+      return server.send(404,"text/plain","error");
     }
   }while(finished_send == 0);
   attachInterrupt(digitalPinToInterrupt(i_boot_req_byte), handleInterrupt, FALLING);
@@ -241,9 +241,9 @@ void handleJSON() {
   //Serial.println("terminado envio data");
   finished_send = 0;
   //attachInterrupt(digitalPinToInterrupt(i_boot_req_byte), handleInterrupt, FALLING);
-  
+
   counter_blocks++;
-  
+
   if(counter_blocks == total_blocks){
     Serial.println("FIN");
     digitalWrite(o_boot_start,LOW);
@@ -258,11 +258,11 @@ void handleJSON() {
   unsigned long ElapsedTimeBlockID = EndTimeBlockID - StartTimeBlockID;
   unsigned long ElapsedTimeDecode = EndTimeDecode - StartTimeDecode;
   unsigned long ElapsedTimeData = EndTimeData - StartTimeData;
-  
- 
+
+
   server.send(200,"text/plain",String(ElapsedTime)+","+String(ElapsedTimeBlockID)+","+String(ElapsedTimeDecode)+","+String(ElapsedTimeData));
-  
-  
+
+
 }
 
 

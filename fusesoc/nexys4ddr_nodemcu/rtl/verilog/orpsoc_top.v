@@ -47,8 +47,8 @@ module orpsoc_top #(
 	input		tdi_pad_i,
 
 
-        output [3:0] debug_leds,
-   	output [3:0]led_test,
+  output [3:0] debug_leds,
+  output [3:0]led_test,
 	input next_button,
 	input center_button,
 	inout [7:0] gpio0_io,
@@ -57,14 +57,17 @@ module orpsoc_top #(
 	//BOOT
 	input spi_comm,
 	input 	   spi_start,
-        input 	   spi_eof,
-        output     o_spi_byte,
+  input 	   spi_eof,
+  output     o_spi_byte,
 	//SPI
 	input	   sclk,
 	input	   mosi,
 	output	   miso,
 	input 	   cs,
-	
+
+	//debug
+	output [7:0] testbench_leds,
+
 	//7seg
 	output [6:0] seg,
 	output [3:0] an,
@@ -73,10 +76,10 @@ module orpsoc_top #(
    	// UART
 	input		uart0_srx_pad_i,
 	output		uart0_stx_pad_o,
-	
-	
+
+
 	// DDR2
-	
+
 	output [12:0]	ddr2_addr,
 	output [2:0]	ddr2_ba,
 	output		ddr2_ras_n,
@@ -91,7 +94,7 @@ module orpsoc_top #(
 	output      ddr2_cs_n,
 	output		ddr2_ck_p,
 	output		ddr2_ck_n
-	
+
 );
 
 parameter	IDCODE_VALUE=32'h14951185;
@@ -537,7 +540,7 @@ display seg7(
 //
 ////////////////////////////////////////////////////////////////////////
 wire ram_rst;
-generic_mux#(.WIDTH(1)) 
+generic_mux#(.WIDTH(1))
 ram_mux_0(
     .a(wb_rst),
     .b(ram0_rst),
@@ -546,7 +549,7 @@ ram_mux_0(
 );
 
 wire ram_we;
-generic_mux#(.WIDTH(1)) 
+generic_mux#(.WIDTH(1))
 ram_mux_1(
     .a(wb_m2s_ddr2_bus_we),
     .b(ram0_we),
@@ -555,7 +558,7 @@ ram_mux_1(
 );
 
 wire ram_cyc;
-generic_mux#(.WIDTH(1)) 
+generic_mux#(.WIDTH(1))
 ram_mux_2(
     .a(wb_m2s_ddr2_bus_cyc),
     .b(ram0_cyc),
@@ -564,7 +567,7 @@ ram_mux_2(
 );
 
 wire ram_stb;
-generic_mux#(.WIDTH(1)) 
+generic_mux#(.WIDTH(1))
 ram_mux_3(
     .a(wb_m2s_ddr2_bus_stb),
     .b(ram0_stb),
@@ -573,7 +576,7 @@ ram_mux_3(
 );
 
 wire ram_cti;
-generic_mux#(.WIDTH(1)) 
+generic_mux#(.WIDTH(1))
 ram_mux_4(
     .a(wb_m2s_ddr2_bus_cti),
     .b(ram0_cti),
@@ -690,6 +693,8 @@ gpio gpio0 (
 	.wb_clk		(wb_clk),
 	.wb_rst		(wb_rst)
 );
+
+assign testbench_leds = gpio0_out;
 
 ////////////////////////////////////////////////////////////////////////
 //
