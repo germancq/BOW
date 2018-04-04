@@ -1,0 +1,40 @@
+<!doctype html>
+<title>Flask_Server</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+{% block body %}
+  <table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>IP</th>
+      <th>Port</th>
+      <th>Setup_file</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for doc in documents %}
+    <tr>
+      <td>{{ doc._id }}</td>
+      <td>{{ doc.ip }}</td>
+      <td>{{ doc.port }}</td>
+      <td>{{ doc.setup_file }}</td>
+      <td>
+        <form action="{{url_for('delete_entry',fpga_id=doc._id)}}" method="post">
+          <input type="submit" value="Delete" />
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+  <form action="{{ url_for('send_form') }}" method=post enctype="application/json">
+      <dl>
+        <dt>id:
+        <dd><input type=number name=id>
+        <dt>Filename:
+        <dd><input type=text name=filename rows=1 cols=120>
+        <dd><input type=submit name=submit value=Add>
+        <dd><input type=submit name=submit value=Send>
+      </dl>
+    </form>
+{% endblock %}

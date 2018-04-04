@@ -1,0 +1,3 @@
+#!/bin/bash
+cd ../flask_server
+python3 setup.py test

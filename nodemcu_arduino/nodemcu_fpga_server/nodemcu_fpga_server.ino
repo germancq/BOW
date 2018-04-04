@@ -5,10 +5,11 @@
 
 #include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 #include<SPI.h>
 #include "base64.hpp" //https://github.com/Densaugeo/base64_arduino
 
-ESP8266WebServer server(3000); //creating the server at port 3000
+
 
 const char* ssid = ""; // Rellena con el nombre de tu red WiFi
 const char* password = ""; // Rellena con la contraseña de tu red WiFi
@@ -17,10 +18,17 @@ const char* password = ""; // Rellena con la contraseña de tu red WiFi
 //miso:D6
 //mosi:D7
 //cs:D8
+WiFiClient client;
+const char* host = "";
+const int server_port = 5000;
+const char * method_name = "boot";
+const int id_nodemcu = 0;
 
+const int esp8266_port = 3000;
 IPAddress ip(192, 168, 1, 40);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
+ESP8266WebServer server(esp8266_port); //creating the server at port 3000
 
 const int slaveSelectPin = D8;
 const int o_boot_start = D3;
@@ -91,8 +99,34 @@ void setup() {
 
 
   interruptCounter = 0;
+  postDataBootloader();
+}
+
+
+void postDataBootloader(){
+
+  //make a request to central server
+  if (!client.connect(host, server_port)) {
+    Serial.println("Ha fallado la conexión");
+    return;
+  }
+  HTTPClient http;    //Declare object of class HTTPClient
+
+  http.begin("http://"+String(host)+":"+String(server_port)+"/"+String(method_name));      //Specify request destination
+  http.addHeader("Content-Type", "application/json");  //Specify content-type header
+
+  int httpCode = http.POST("{\"id\":"+String(id_nodemcu)+",\"port\":"+String(esp8266_port)+"}");   //Send the request
+  if (httpCode > 0) { //Check the returning code
+
+      String payload = http.getString();   //Get the request response payload
+      Serial.println(payload);             //Print the response payload
+
+  }else Serial.println("An error ocurred");
+
+  http.end();   //Close connection
 
 }
+
 
 void handleInterrupt() {
   cli();

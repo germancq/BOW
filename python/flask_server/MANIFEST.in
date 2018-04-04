@@ -1,0 +1,3 @@
+graft flask_server/templates
+graft flask_server/static
+graft flask_server/celery_setup
