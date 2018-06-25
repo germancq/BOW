@@ -1,0 +1,14 @@
+CAPI=1
+[main]
+description = 7 segments for 32 bits data
+
+
+[verilog]
+src_files =
+ rtl/verilog/display.v
+ rtl/verilog/convertidor.v
+ rtl/verilog/secuencia.v
+ rtl/verilog/display_mem.v
+ rtl/verilog/contador.v
+
+

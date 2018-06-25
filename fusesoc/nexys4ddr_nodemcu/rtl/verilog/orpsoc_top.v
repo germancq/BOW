@@ -70,7 +70,7 @@ module orpsoc_top #(
 
 	//7seg
 	output [6:0] seg,
-	output [3:0] an,
+	output [7:0] an,
 	output DP,
 
    	// UART
@@ -528,7 +528,7 @@ SPI_slave esp8266(
 display seg7(
     .extclk(wb_clk),
 	.reset(wb_rst),
-	.din({8'hAB,spi_2_boot_data}),//15:0
+	.din({24'hABCDEF,spi_2_boot_data}),
 	.w_display(1'b1),
 	.seg(seg),
 	.an(an)

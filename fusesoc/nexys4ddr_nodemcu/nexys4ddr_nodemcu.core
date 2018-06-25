@@ -8,6 +8,8 @@ depend =
  or1200-r2
  uart16550-1.5-vivado
  wb_intercon-vivado-1.0
+ 7seg_32bits
+ bootloader_wishbone
 
 [fileset core]
 usage = vivado
@@ -23,21 +25,11 @@ src_files =
  rtl/verilog/rstgen.v
  rtl/verilog/rom.v
  rtl/verilog/wb_intercon.v
- rtl/verilog/contador_up.v
- rtl/verilog/biestable_d.v
- rtl/verilog/and_gate.v
- rtl/verilog/pulse_button.v
- rtl/verilog/bootloaderModule.v
- rtl/verilog/registro.v
  rtl/verilog/MIG_ddr/xilinx_ddr2.v
  rtl/verilog/MIG_ddr/wb2axi.v
  rtl/verilog/generic_mux.v
  rtl/verilog/spi_slave.v
- rtl/verilog/display.v
- rtl/verilog/display_mem.v
- rtl/verilog/secuencia.v
- rtl/verilog/convertidor.v
- rtl/verilog/contador.v
+ 
  
 include_files =
  rtl/verilog/include/or1200_defines.v
